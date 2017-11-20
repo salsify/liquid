@@ -1,3 +1,5 @@
+require 'json'
+
 module Liquid
   class BlockBody
     FullToken = /\A#{TagStart}#{WhitespaceControl}?\s*(\w+)\s*(.*?)#{WhitespaceControl}?#{TagEnd}\z/om
@@ -105,7 +107,7 @@ module Liquid
 
     def render_node(node, context)
       node_output = node.is_a?(String) ? node : node.render(context)
-      node_output = node_output.is_a?(Array) ? node_output.join : node_output.to_s
+      node_output = node_output.is_a?(Array) || node_output.is_a?(Hash) ? node_output.to_json : node_output.to_s
 
       context.resource_limits.render_length += node_output.length
       if context.resource_limits.reached?

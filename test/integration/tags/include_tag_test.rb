@@ -91,7 +91,7 @@ class IncludeTagTest < Minitest::Test
   end
 
   def test_include_tag_for
-    assert_template_result "Product: Draft 151cm Product: Element 155cm ",
+    assert_template_result "[\"Product: Draft 151cm \",\"Product: Element 155cm \"]",
       "{% include 'product' for products %}", "products" => [ { 'title' => 'Draft 151cm' }, { 'title' => 'Element 155cm' } ]
   end
 
@@ -124,7 +124,7 @@ class IncludeTagTest < Minitest::Test
     assert_template_result "Product: Draft 151cm details ",
       "{% include 'nested_product_template' with product %}", "product" => { "title" => 'Draft 151cm' }
 
-    assert_template_result "Product: Draft 151cm details Product: Element 155cm details ",
+    assert_template_result "[\"Product: Draft 151cm details \",\"Product: Element 155cm details \"]",
       "{% include 'nested_product_template' for products %}", "products" => [{ "title" => 'Draft 151cm' }, { "title" => 'Element 155cm' }]
   end
 

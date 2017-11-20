@@ -78,7 +78,7 @@ class FiltersTest < Minitest::Test
 
     assert_equal '1 2 3 4', Template.parse("{{numbers | sort | join}}").render(@context)
     assert_equal 'alphabetic as expected', Template.parse("{{words | sort | join}}").render(@context)
-    assert_equal '3', Template.parse("{{value | sort}}").render(@context)
+    assert_equal '[3]', Template.parse("{{value | sort}}").render(@context)
     assert_equal 'are flower', Template.parse("{{arrays | sort | join}}").render(@context)
     assert_equal 'Expected case sensitive', Template.parse("{{case_sensitive | sort | join}}").render(@context)
   end

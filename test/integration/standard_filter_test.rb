@@ -253,29 +253,29 @@ class StandardFiltersTest < Minitest::Test
 
   def test_map
     assert_equal [1, 2, 3, 4], @filters.map([{ "a" => 1 }, { "a" => 2 }, { "a" => 3 }, { "a" => 4 }], 'a')
-    assert_template_result 'abc', "{{ ary | map:'foo' | map:'bar' }}",
+    assert_template_result '["a","b","c"]', "{{ ary | map:'foo' | map:'bar' }}",
       'ary' => [{ 'foo' => { 'bar' => 'a' } }, { 'foo' => { 'bar' => 'b' } }, { 'foo' => { 'bar' => 'c' } }]
   end
 
   def test_map_doesnt_call_arbitrary_stuff
-    assert_template_result "", '{{ "foo" | map: "__id__" }}'
-    assert_template_result "", '{{ "foo" | map: "inspect" }}'
+    assert_template_result "[null]", '{{ "foo" | map: "__id__" }}'
+    assert_template_result "[null]", '{{ "foo" | map: "inspect" }}'
   end
 
   def test_map_calls_to_liquid
     t = TestThing.new
-    assert_template_result "woot: 1", '{{ foo | map: "whatever" }}', "foo" => [t]
+    assert_template_result "[\"woot: 1\"]", '{{ foo | map: "whatever" }}', "foo" => [t]
   end
 
   def test_map_on_hashes
-    assert_template_result "4217", '{{ thing | map: "foo" | map: "bar" }}',
+    assert_template_result "[42,17]", '{{ thing | map: "foo" | map: "bar" }}',
       "thing" => { "foo" => [ { "bar" => 42 }, { "bar" => 17 } ] }
   end
 
   def test_legacy_map_on_hashes_with_dynamic_key
     template = "{% assign key = 'foo' %}{{ thing | map: key | map: 'bar' }}"
     hash = { "foo" => { "bar" => 42 } }
-    assert_template_result "42", template, "thing" => hash
+    assert_template_result "[42]", template, "thing" => hash
   end
 
   def test_sort_calls_to_liquid
@@ -288,7 +288,7 @@ class StandardFiltersTest < Minitest::Test
     drop = TestDrop.new
     p = proc{ drop }
     templ = '{{ procs | map: "test" }}'
-    assert_template_result "testfoo", templ, "procs" => [p]
+    assert_template_result "[\"testfoo\"]", templ, "procs" => [p]
   end
 
   def test_map_over_drops_returning_procs
@@ -301,15 +301,15 @@ class StandardFiltersTest < Minitest::Test
       },
     ]
     templ = '{{ drops | map: "proc" }}'
-    assert_template_result "foobar", templ, "drops" => drops
+    assert_template_result "[\"foo\",\"bar\"]", templ, "drops" => drops
   end
 
   def test_map_works_on_enumerables
-    assert_template_result "123", '{{ foo | map: "foo" }}', "foo" => TestEnumerable.new
+    assert_template_result "[1,2,3]", '{{ foo | map: "foo" }}', "foo" => TestEnumerable.new
   end
 
   def test_sort_works_on_enumerables
-    assert_template_result "213", '{{ foo | sort: "bar" | map: "foo" }}', "foo" => TestEnumerable.new
+    assert_template_result "[2,1,3]", '{{ foo | sort: "bar" | map: "foo" }}', "foo" => TestEnumerable.new
   end
 
   def test_first_and_last_call_to_liquid

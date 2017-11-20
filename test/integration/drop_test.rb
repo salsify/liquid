@@ -142,14 +142,14 @@ class DropsTest < Minitest::Test
     assert_equal "", Liquid::Template.parse("{{ product.inspect }}").render!('product' => ProductDrop.new)
     assert_equal "", Liquid::Template.parse("{{ product.pretty_inspect }}").render!('product' => ProductDrop.new)
     assert_equal "", Liquid::Template.parse("{{ product.whatever }}").render!('product' => ProductDrop.new)
-    assert_equal "", Liquid::Template.parse('{{ product | map: "inspect" }}').render!('product' => ProductDrop.new)
-    assert_equal "", Liquid::Template.parse('{{ product | map: "pretty_inspect" }}').render!('product' => ProductDrop.new)
-    assert_equal "", Liquid::Template.parse('{{ product | map: "whatever" }}').render!('product' => ProductDrop.new)
+    assert_equal "[null]", Liquid::Template.parse('{{ product | map: "inspect" }}').render!('product' => ProductDrop.new)
+    assert_equal "[null]", Liquid::Template.parse('{{ product | map: "pretty_inspect" }}').render!('product' => ProductDrop.new)
+    assert_equal "[null]", Liquid::Template.parse('{{ product | map: "whatever" }}').render!('product' => ProductDrop.new)
   end
 
   def test_drops_respond_to_to_liquid
     assert_equal "text1", Liquid::Template.parse("{{ product.to_liquid.texts.text }}").render!('product' => ProductDrop.new)
-    assert_equal "text1", Liquid::Template.parse('{{ product | map: "to_liquid" | map: "texts" | map: "text" }}').render!('product' => ProductDrop.new)
+    assert_equal "[\"text1\"]", Liquid::Template.parse('{{ product | map: "to_liquid" | map: "texts" | map: "text" }}').render!('product' => ProductDrop.new)
   end
 
   def test_text_drop
